@@ -1,0 +1,21 @@
+Options -Indexes
+ServerSignature Off
+
+# Deny access to hidden files and repository metadata.
+<FilesMatch "^\.(?!well-known/)">
+    Require all denied
+</FilesMatch>
+RedirectMatch 404 "(?i)/\.git"
+
+# Prevent access to common private/configuration files if uploaded accidentally.
+<FilesMatch "(?i)^(README\.md|\.env|composer\.(json|lock)|package(-lock)?\.json)$">
+    Require all denied
+</FilesMatch>
+
+# Basic response hardening for Apache deployments.
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
